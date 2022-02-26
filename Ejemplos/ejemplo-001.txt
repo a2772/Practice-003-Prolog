@@ -1,0 +1,12 @@
+# En los txt guardaré los ejemplos probados en Prolog
+
+progenitor(clara,X) , progenitor(X,josé).
+
+abuelo(clara,josé).
+abuelo(pedro,clara).
+abuelo(josé,clara).
+
+progenitor(ana,X),progenitor(X,Y),progenitor(Y,Z).
+progenitor(ana,X),abuelo(X,Y).
+
+bisabuelo(ana,josé).
