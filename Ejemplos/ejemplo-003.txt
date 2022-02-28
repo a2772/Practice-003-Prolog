@@ -1,0 +1,9 @@
+conexion(a,i,_).
+conexion(f,X,Costo). ;
+
+tieneArista(f).
+tieneArista(b).
+
+costoLlegarA(d,f,i,Cost).
+
+camino(d,g).
