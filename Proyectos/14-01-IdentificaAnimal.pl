@@ -37,8 +37,6 @@ r6_pinguino          :- r2_ave,
                         preguntar(sabe_nadar).
 r7_albatros          :- r2_ave,
                         preguntar(es_muy_bueno_para_volar).
-/* classification rules */
-
 
 /* Default de la pregunta */
 hacepregunta(Preg) :-
