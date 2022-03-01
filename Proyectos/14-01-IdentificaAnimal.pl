@@ -1,6 +1,5 @@
 /* Base de conocimiento para identificar animales con Prolog
 Para ejecutar el programa escribir "inicio" seguido de un punto: ?- inicio.     */
-
 inicio :- animalSupuesto(Animal),
       write('Dadas las respuestas a las preguntas formuladas, se llega a la conclusión de que el resultado es: '),
       write(Animal),
@@ -10,7 +9,7 @@ inicio :- animalSupuesto(Animal),
 /* Animales posibles con los que probaremos */
 animalSupuesto(leopardo)   :- r4_leopardo, !.
 animalSupuesto(tigre)      :- r5_tigre, !.
-animalSupuesto(pinguino)   :- r6_pinguino, !.
+animalSupuesto(pingüino)   :- r6_pinguino, !.
 animalSupuesto(albatros)   :- r7_albatros, !.
 animalSupuesto(caracteristicas_de_animal_desconocido).             /* No es una especie de la base de conocimiento */
 
@@ -48,27 +47,28 @@ hacepregunta(Preg) :-
     write('? '),
     read(Input),
     nl,
-    ( (Input == yes ; Input == y ; Input == si ; Input == s)
+    (
+     (Input == yes ; Input == y ; Input == si ; Input == s)
       ->
-       assert(yes(Preg)) ;
-       assert(no(Preg)), fail).
+       assert(si(Preg));
+      assert(no(Preg)),
+     fail
+    ).
 
-:- dynamic yes/1,no/1.
+:- dynamic si/1, no/1.
 
 /* Estructura de las preguntas */
-preguntar(S) :- (
-                 yes(S) 
+preguntar(P) :- (
+                 si(P) 
                  ->
                  true ;
                  (
-                  no(S)
+                  no(P)
                   ->
-                  fail ;
-                  hacepregunta(S)
+                  fail;
+                   hacepregunta(P)
                  )
                 ).
-
-/* undo all yes/no assertions */
 undo :- retract(yes(_)),fail. 
 undo :- retract(no(_)),fail.
 undo.
