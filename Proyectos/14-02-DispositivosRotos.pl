@@ -55,3 +55,4 @@ conectado(light4,fuse2).
 
 askable( encendido(D), encendido( 'Dispositivo') ).
 askable( funciona(D), funciona('Dispositivo') ).
+.....................
