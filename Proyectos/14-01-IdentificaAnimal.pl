@@ -1,88 +1,72 @@
-/* animal.pro
-  animal identification game.  
+/* Base de conocimiento para identificar animales con Prolog
+Para ejecutar el programa escribir "inicio" seguido de un punto: ?- inicio.     */
 
-    start with ?- go.     */
-
-go :- hypothesize(Animal),
-      write('I guess that the animal is: '),
+inicio :- animalSupuesto(Animal),
+      write('Dadas las respuestas a las preguntas formuladas, se llega a la conclusión de que el resultado es: '),
       write(Animal),
       nl,
       undo.
 
-/* hypotheses to be tested */
-hypothesize(cheetah)   :- cheetah, !.
-hypothesize(tiger)     :- tiger, !.
-hypothesize(giraffe)   :- giraffe, !.
-hypothesize(zebra)     :- zebra, !.
-hypothesize(ostrich)   :- ostrich, !.
-hypothesize(penguin)   :- penguin, !.
-hypothesize(albatross) :- albatross, !.
-hypothesize(unknown).             /* no diagnosis */
+/* Animales posibles con los que probaremos */
+animalSupuesto(leopardo)   :- r4_leopardo, !.
+animalSupuesto(tigre)      :- r5_tigre, !.
+animalSupuesto(pinguino)   :- r6_pinguino, !.
+animalSupuesto(albatros)   :- r7_albatros, !.
+animalSupuesto(caracteristicas_de_animal_desconocido).             /* No es una especie de la base de conocimiento */
 
-/* animal identification rules */
-cheetah :- mammal, 
-           carnivore, 
-           verify(has_tawny_color),
-           verify(has_dark_spots).
-tiger :- mammal,  
-         carnivore,
-         verify(has_tawny_color), 
-         verify(has_black_stripes).
-giraffe :- ungulate, 
-           verify(has_long_neck), 
-           verify(has_long_legs).
-zebra :- ungulate,  
-         verify(has_black_stripes).
-
-ostrich :- bird,  
-           verify(does_not_fly), 
-           verify(has_long_neck).
-penguin :- bird, 
-           verify(does_not_fly), 
-           verify(swims),
-           verify(is_black_and_white).
-albatross :- bird,
-             verify(appears_in_story_Ancient_Mariner),
-             verify(flys_well).
-
+/* Reglas para cada animal */
+r1_mamifero          :- preguntar(tiene_pelaje);
+                        preguntar(da_leche).
+r2_ave               :- preguntar(tiene_plumaje);
+                        preguntar(vuela),
+                        preguntar(pone_huevos).
+r3_carnivoro         :- r1_mamifero,
+                        (preguntar(come_carne);
+                         preguntar(tiene_dientes_puntiagudos),
+                         preguntar(tiene_garras),
+                         preguntar(tiene_ojos_orientados_frontalmente)
+                        ).
+/* Reglas para animales específicos */
+r4_leopardo          :- r3_carnivoro,
+                        preguntar(color_anaranjado),
+                        preguntar(tiene_puntos_negros).
+r5_tigre             :- r3_carnivoro,
+                        preguntar(color_anaranjado),
+                        preguntar(tiene_rayas_negras).
+r6_pinguino          :- r2_ave,
+                        \+ preguntar(vuela),
+                        preguntar(sabe_nadar).
+r7_albatros          :- r2_ave,
+                        preguntar(es_muy_bueno_para_volar).
 /* classification rules */
-mammal    :- verify(has_hair), !.
-mammal    :- verify(gives_milk).
-bird      :- verify(has_feathers), !.
-bird      :- verify(flys), 
-             verify(lays_eggs).
-carnivore :- verify(eats_meat), !.
-carnivore :- verify(has_pointed_teeth), 
-             verify(has_claws),
-             verify(has_forward_eyes).
-ungulate :- mammal, 
-            verify(has_hooves), !.
-ungulate :- mammal, 
-            verify(chews_cud).
 
-/* how to ask questions */
-ask(Question) :-
-    write('Does the animal have the following attribute: '),
-    write(Question),
+
+/* Default de la pregunta */
+hacepregunta(Preg) :-
+    write('¿Tiene el animal la caracteristica siguiente?: '),
+    write(Preg),
     write('? '),
-    read(Response),
+    read(Input),
     nl,
-    ( (Response == yes ; Response == y)
+    ( (Input == yes ; Input == y ; Input == si ; Input == s)
       ->
-       assert(yes(Question)) ;
-       assert(no(Question)), fail).
+       assert(yes(Preg)) ;
+       assert(no(Preg)), fail).
 
 :- dynamic yes/1,no/1.
 
-/* How to verify something */
-verify(S) :-
-   (yes(S) 
-    ->
-    true ;
-    (no(S)
-     ->
-     fail ;
-     ask(S))).
+/* Estructura de las preguntas */
+preguntar(S) :- (
+                 yes(S) 
+                 ->
+                 true ;
+                 (
+                  no(S)
+                  ->
+                  fail ;
+                  hacepregunta(S)
+                 )
+                ).
 
 /* undo all yes/no assertions */
 undo :- retract(yes(_)),fail. 
