@@ -1,0 +1,59 @@
+/* Declarando el inicio
+inicio :- dispositivos_funcionan(Respuesta),
+          write('Se harán unas preguntas para comprobar dónde está la falla. '),
+          nl,
+          write(Respuesta),
+          nl,
+          undo.
+*/
+
+regla_roto :- (
+               encendido(Dispositivo),
+	       dispositivo(Dispositivo),
+               \+ funciona(Dispositivo),
+               conectado(Dispositivo,Fusible),
+               probado(intacto(Fusible))
+              )
+              ->
+              probado(roto(Dispositivo)).
+
+regla_fusible_correcto :- (
+               conectado(Dispositivo,Fusible),
+               funciona(Dispositivo)
+              )
+              ->
+              probado(intacto(Fusible)).
+
+regla_fundido :- (
+              conectado(Dispositivo1,Fusible),
+              encendido(Dispositivo1),
+              \+ funciona(Dispositivo1),
+              mismo_fusible(Dispositivo2,Dispositivo1),
+              encendido(Dispositivo2),
+              \+ funciona(Dispositivo2)
+             )
+             ->
+             probado(falla(Fusible)).
+
+regla_mismo_fusible :- (
+             conectado(Dispositivo1,Fusible),
+             conectado(Dispositvo2,Fusible),
+             diferente(Dispositivo1,Dispositivo2)
+            )
+            ->
+             mismo_fusible(Dispositivo1,Dispositivo2).
+
+diferente(X,Y) :- \+ (X=Y).
+dispositivo(calentador).
+dispositivo(luz1).
+dispositivo(luz2).
+dispositivo(luz).
+dispositivo(luz4).
+conectado(luzl,fusiblel).
+conectado(luz2,fusiblel).
+conectado(calentador,fusiblel).
+conectado(luz3,fusible2).
+conectado(luz4,fusible2).
+
+askable(encendido(D), encendido( 'Dispositivo') ).
+askable(funciona(D), funciona('Dispositivo') ).

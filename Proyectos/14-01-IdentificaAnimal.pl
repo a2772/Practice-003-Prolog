@@ -8,7 +8,7 @@ inicio :- animalSupuesto(Animal),
 
 /* Animales posibles con los que probaremos */
 animalSupuesto(leopardo)   :- r4_leopardo, !.
-animalSupuesto(tigre)      :- r5_tigre, !.
+animalSupuesto(tigre)      :- r5_tiGre, !.
 animalSupuesto(pingüino)   :- r6_pinguino, !.
 animalSupuesto(albatros)   :- r7_albatros, !.
 animalSupuesto(caracteristicas_de_animal_desconocido).             /* No es una especie de la base de conocimiento */
@@ -29,7 +29,7 @@ r3_carnivoro         :- r1_mamifero,
 r4_leopardo          :- r3_carnivoro,
                         preguntar(color_anaranjado),
                         preguntar(tiene_puntos_negros).
-r5_tigre             :- r3_carnivoro,
+r5_tiGre             :- r3_carnivoro,
                         preguntar(color_anaranjado),
                         preguntar(tiene_rayas_negras).
 r6_pinguino          :- r2_ave,
